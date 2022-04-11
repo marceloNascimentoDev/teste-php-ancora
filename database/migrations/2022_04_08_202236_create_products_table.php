@@ -20,7 +20,6 @@ return new class extends Migration
             $table->float('price');
             $table->integer('amount');
             $table->string('brand');
-            $table->softDeletes();
             $table->timestamps();
         });
     }

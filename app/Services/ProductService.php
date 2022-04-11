@@ -27,6 +27,10 @@ class ProductService {
         return $this->ProductRepository->getAll();
     }
 
+    public function update(Int $productId, Array $data): Product {
+        return $this->ProductRepository->update($productId, $data);
+    }
+
     public function findById(Int $productId) {
         return $this->ProductRepository->find($productId);
     }

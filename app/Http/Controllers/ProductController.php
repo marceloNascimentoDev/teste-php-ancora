@@ -96,7 +96,32 @@ class ProductController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        DB::beginTransaction();
+
+        try {
+            $product = $this->ProductService->findById($id);
+
+            if(!$product) {
+                return Response()->json(['data' => 'Product not found', 'success' => false], 404);
+            }
+
+            if($productCode = $this->ProductService->findByCode($request->get('code'))) {
+                if($productCode->id != $product->id) {
+                    return Response()->json(['data' => 'Code has already been registered', 'success' => false], 422);
+                }
+            } 
+
+            $product = $this->ProductService->update($id, $request->all());
+
+            return Response()->json([
+                'data'    => ProductResource::make($product),
+                'success' => true
+            ], 200);
+
+            DB::commit();
+        } catch (\Throwable $th) {
+            return Response()->json(['data' => '', 'success' => false], 500);
+        }
     }
 
     /**
