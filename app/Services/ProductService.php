@@ -27,6 +27,10 @@ class ProductService {
         return $this->ProductRepository->getAll();
     }
 
+    public function findById(Int $productId) {
+        return $this->ProductRepository->find($productId);
+    }
+
     public function findByCode(String $code) {
         $product =$this->ProductRepository->where([['code', '=', $code]]);
 

@@ -71,7 +71,20 @@ class ProductController extends Controller
      */
     public function show($id)
     {
-        //
+        try {
+            $product = $this->ProductService->findById($id);
+
+            if(!$product) {
+                return Response()->json(['data' => 'Product not found', 'success' => false], 404);
+            }
+
+            return Response()->json([
+                'data'    => ProductResource::make($product),
+                'success' => true
+            ], 200);
+        } catch (\Throwable $th) {
+            return Response()->json(['data' => '', 'success' => false], 500);
+        }
     }
 
     /**

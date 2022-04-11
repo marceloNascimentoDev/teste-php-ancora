@@ -22,6 +22,7 @@ class ProductResource extends JsonResource
             "brand"         => $this->brand,
             "updated_at"    => $this->updated_at,
             "created_at"    => $this->created_at,
+            "id"            => $this->id
         ];
     }
 }
