@@ -23,7 +23,16 @@ class ProductController extends Controller
      */
     public function index()
     {
-        //
+        try {
+            $products = $this->ProductService->getAll();
+
+            return Response()->json([
+                'data'    => ProductResource::collection($products),
+                'success' => true
+            ], 200);
+        } catch (\Throwable $th) {
+            return Response()->json(['data' => '', 'success' => false], 500);
+        }
     }
 
     /**
@@ -44,7 +53,7 @@ class ProductController extends Controller
             $product = $this->ProductService->store($request->all());
 
             DB::commit();
-            
+
             return Response()->json([
                 'data'    => ProductResource::make($product),
                 'success' => true

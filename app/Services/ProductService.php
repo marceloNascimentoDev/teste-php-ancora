@@ -3,6 +3,8 @@
 namespace app\Services;
 
 use App\Repositories\ProductRepository;
+use Illuminate\Database\Eloquent\Collection;
+use App\Models\Product;
 
 class ProductService {
     protected $ProductRepository;
@@ -13,12 +15,16 @@ class ProductService {
         $this->ProductRepository = $ProductRepository;
     }
 
-    public function store(Array $data) {
+    public function store(Array $data): Product {
         try {
             return $this->ProductRepository->store($data);
         } catch (\Exception $th) {
             throw $th;
         }
+    }
+
+    public function getAll(): Collection {
+        return $this->ProductRepository->getAll();
     }
 
     public function findByCode(String $code) {
