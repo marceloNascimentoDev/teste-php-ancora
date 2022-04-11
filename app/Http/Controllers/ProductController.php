@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use DB;
 use App\Services\ProductService;
 use App\Http\Resources\ProductResource;
-use App\Http\Requests\ProductStoreRequest;
+use App\Http\Requests\ProductRequest;
 
 class ProductController extends Controller
 {
@@ -41,7 +41,7 @@ class ProductController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(ProductStoreRequest $request)
+    public function store(ProductRequest $request)
     {
         DB::beginTransaction();
 
@@ -60,7 +60,7 @@ class ProductController extends Controller
             ], 200);
         } catch (\Throwable $th) {
             DB::rollback();
-            
+
             return Response()->json(['data' => '', 'success' => false], 500);
         }
     }
@@ -96,7 +96,7 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(ProductRequest $request, $id)
     {
         DB::beginTransaction();
 
