@@ -16,4 +16,9 @@ class Product extends Model
         'price',
         'brand'
     ];
+
+    public function setNameAttribute($value)
+    {
+        $this->attributes['name'] = strtolower($value);
+    }
 }
