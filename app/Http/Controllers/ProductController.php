@@ -7,6 +7,7 @@ use DB;
 use App\Services\ProductService;
 use App\Http\Resources\ProductResource;
 use App\Http\Requests\ProductRequest;
+use App\Enums\StatusCode;
 
 class ProductController extends Controller
 {
@@ -29,9 +30,9 @@ class ProductController extends Controller
             return Response()->json([
                 'data'    => ProductResource::collection($products),
                 'success' => true
-            ], 200);
+            ], StatusCode::SUCCESS);
         } catch (\Throwable $th) {
-            return Response()->json(['data' => '', 'success' => false], 500);
+            return Response()->json(['data' => '', 'success' => false], StatusCode::ERROR);
         }
     }
 
@@ -45,8 +46,9 @@ class ProductController extends Controller
     {
         DB::beginTransaction();
 
+
         if($this->ProductService->findByCode($request->get('code'))) {
-            return Response()->json(['data' => 'Code has already been registered', 'success' => false], 422);
+            return Response()->json(['data' => 'Code has already been registered', 'success' => false], StatusCode::UNPROCESSABLE_CONTENT);
         }
 
         try {
@@ -57,11 +59,11 @@ class ProductController extends Controller
             return Response()->json([
                 'data'    => ProductResource::make($product),
                 'success' => true
-            ], 200);
+            ], StatusCode::SUCCESS);
         } catch (\Throwable $th) {
             DB::rollback();
 
-            return Response()->json(['data' => '', 'success' => false], 500);
+            return Response()->json(['data' => '', 'success' => false], StatusCode::ERROR);
         }
     }
 
@@ -77,15 +79,15 @@ class ProductController extends Controller
             $product = $this->ProductService->findById($id);
 
             if(!$product) {
-                return Response()->json(['data' => 'Product not found', 'success' => false], 404);
+                return Response()->json(['data' => 'Product not found', 'success' => false], StatusCode::NOT_FOUND);
             }
 
             return Response()->json([
                 'data'    => ProductResource::make($product),
                 'success' => true
-            ], 200);
+            ], StatusCode::SUCCESS);
         } catch (\Throwable $th) {
-            return Response()->json(['data' => '', 'success' => false], 500);
+            return Response()->json(['data' => '', 'success' => false], StatusCode::ERROR);
         }
     }
 
@@ -104,12 +106,12 @@ class ProductController extends Controller
             $product = $this->ProductService->findById($id);
 
             if(!$product) {
-                return Response()->json(['data' => 'Product not found', 'success' => false], 404);
+                return Response()->json(['data' => 'Product not found', 'success' => false], StatusCode::NOT_FOUND);
             }
 
             if($productCode = $this->ProductService->findByCode($request->get('code'))) {
                 if($productCode->id != $product->id) {
-                    return Response()->json(['data' => 'Code has already been registered', 'success' => false], 422);
+                    return Response()->json(['data' => 'Code has already been registered', 'success' => false], StatusCode::UNPROCESSABLE_CONTENT);
                 }
             } 
 
@@ -120,12 +122,12 @@ class ProductController extends Controller
             return Response()->json([
                 'data'    => ProductResource::make($product),
                 'success' => true
-            ], 200);
+            ], StatusCode::SUCCESS);
 
         } catch (\Throwable $th) {
             DB::rollback();
 
-            return Response()->json(['data' => '', 'success' => false], 500);
+            return Response()->json(['data' => '', 'success' => false], StatusCode::ERROR);
         }
     }
 
@@ -143,7 +145,7 @@ class ProductController extends Controller
             $product = $this->ProductService->findById($id);
 
             if(!$product) {
-                return Response()->json(['data' => 'Product not found', 'success' => false], 404);
+                return Response()->json(['data' => 'Product not found', 'success' => false], StatusCode::NOT_FOUND);
             }
 
             $product = $this->ProductService->destroy($id);
@@ -153,12 +155,12 @@ class ProductController extends Controller
             return Response()->json([
                 'data'    => 'Product was deleted',
                 'success' => true
-            ], 200);
+            ], StatusCode::SUCCESS);
 
         } catch (\Throwable $th) {
             DB::rollback();
 
-            return Response()->json(['data' => '', 'success' => false], 500);
+            return Response()->json(['data' => '', 'success' => false], StatusCode::ERROR);
         }
     }
 }
