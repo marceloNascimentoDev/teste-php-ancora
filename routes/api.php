@@ -14,4 +14,8 @@ use App\Http\Controllers\ProductController;
 |
 */
 
+Route::get('/', function () {
+    return json_encode('API Ancora V1.0.0');
+});
+
 Route::resource('product', ProductController::class);

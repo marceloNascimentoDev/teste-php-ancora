@@ -1,64 +1,81 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
+# Sobre o projeto
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Este é um projeto em PHP desenvolvido utilizando o framework Laravel 9 utilizando o padrão MVC e php 8.1.
 
-## About Laravel
+##### Documentação da API: https://documenter.getpostman.com/view/14447906/UVyytshb
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## O Desafio
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+#### Requisitos
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- Criar uma API que implementa o crud de produtos utilizando o framework laravel.
 
-## Learning Laravel
+Um produto deve possuir os seguintes dados:
+- ID (PK - Inteiro)
+- Código (String)
+- Nome (String)
+- Preço (Float)
+- Qty Disponível (Inteiro)
+- Marca (String Alfanumérica)
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+A API deve implementar os seguintes verbos e endpoint:
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- GET /api/products/
+  - Lista todos os produtos da aplicação.
+- POST /api/products/
+  - Cria um novo produto na aplicação.
+  - Não deve permitir duplicação de códigos. O código deve ser único.
+- GET /api/products/id/
+  - Obtém um produto específico por meio do ID
+- PUT /api/products/id/
+  - Atualiza um produto específico (todo o objeto deve ser atualizado).
+- DELETE /api/products/id/
+  - Deleta um produto especifico da aplicação
 
-## Laravel Sponsors
+- Use PHP 8.x e Mysql 8.x
+- Você deve utilizar o Laravel 8 para criação da solução.
+- Você deve implementar o seed de produtos no banco de dados para eventuais testes.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+<br>
 
-### Premium Partners
+## A solução
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+#### Como rodar o projeto
 
-## Contributing
+**Antes de seguir os passos abaixo tenha certeza que o docker e docker-compose estão instalados na maquina. Para rodar este projeto:**
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+1\. Clone este repositorio  e entre na pasta
 
-## Code of Conduct
+```
+git clone https://github.com/marceloNascimentoDev/teste-php-ancora.git
+cd teste-php-ancora
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+2\. As configurações são armazenadas no arquivo \.env (Previamente configurado)\.
 
-## Security Vulnerabilities
+3\. Faça o build dos containers \, o container **app** utilizara a porta 8001 e o container **db** utilizara a porta 8306, certifique-se que essas portas estejam livres antes de continuar. Se seu usuário não estiver incluido no grupo de permissões do **docker e docker-compose**  será necessário executar os comandos como administrador (sudo)
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```
+docker-compose up -d
+```
 
-## License
+4\. Caso esteja utilizando Linux basta rodar o script de configuração dentro da pasta do projeto que tudo será feito automaticamente
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+```
+.docker/script.sh
+```
+
+<br>
+
+5\. Caso não esteja utilizando linux basta rodar os seguintes scripts na pasta do projeto.
+
+```
+docker exec $APP_CONTAINER_ID cp .env.example .env
+
+cp .env.example .env
+docker exec $(docker ps -aqf "name=app") composer install
+docker exec $(docker ps -aqf "name=app") php artisan migrate --seed --force
+docker exec $(docker ps -aqf "name=app") chmod -R 777 storage bootstrap/cache
+```
+
+6\. Agora você pode acessar aplicação em [localhost ou clique aqui!](http://localhost:8001)
