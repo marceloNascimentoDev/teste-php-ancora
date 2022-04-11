@@ -28,7 +28,19 @@ class ProductService {
     }
 
     public function update(Int $productId, Array $data): Product {
-        return $this->ProductRepository->update($productId, $data);
+        try {
+            return $this->ProductRepository->update($productId, $data);
+        } catch (\Exception $th) {
+            throw $th;
+        }
+    }
+
+    public function destroy(Int $productId): Product {
+        try {
+            return $this->ProductRepository->destroy($productId);
+        } catch (\Exception $th) {
+            throw $th;
+        }
     }
 
     public function findById(Int $productId) {

@@ -59,6 +59,8 @@ class ProductController extends Controller
                 'success' => true
             ], 200);
         } catch (\Throwable $th) {
+            DB::rollback();
+            
             return Response()->json(['data' => '', 'success' => false], 500);
         }
     }
@@ -113,13 +115,16 @@ class ProductController extends Controller
 
             $product = $this->ProductService->update($id, $request->all());
 
+            DB::commit();
+
             return Response()->json([
                 'data'    => ProductResource::make($product),
                 'success' => true
             ], 200);
 
-            DB::commit();
         } catch (\Throwable $th) {
+            DB::rollback();
+
             return Response()->json(['data' => '', 'success' => false], 500);
         }
     }
@@ -132,6 +137,28 @@ class ProductController extends Controller
      */
     public function destroy($id)
     {
-        //
+        DB::beginTransaction();
+        
+        try {
+            $product = $this->ProductService->findById($id);
+
+            if(!$product) {
+                return Response()->json(['data' => 'Product not found', 'success' => false], 404);
+            }
+
+            $product = $this->ProductService->destroy($id);
+
+            DB::commit();
+
+            return Response()->json([
+                'data'    => 'Product was deleted',
+                'success' => true
+            ], 200);
+
+        } catch (\Throwable $th) {
+            DB::rollback();
+
+            return Response()->json(['data' => '', 'success' => false], 500);
+        }
     }
 }
